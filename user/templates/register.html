@@ -1,0 +1,48 @@
+{% extends 'base_user.html' %}
+{% block header %}
+<style>
+    .note
+      {
+        text-align: center;
+        height: 80px;
+        background: -webkit-linear-gradient(left, darkgrey, black);
+        color: #fff;
+        font-weight: bold;
+        line-height: 80px;
+      }
+    .form-content
+      {
+        padding: 5%;
+        border: 1px solid #ced4da;
+        margin-bottom: 2%;
+      }
+</style>
+{% endblock %}
+{% block contents %}
+<div class="container">
+	<div class="row note">
+	    <div class="col-12 text-center" style="color:white">
+	        블로그 회원가입
+	    </div>
+	</div>
+	<div class="form-content row">
+	    <div class="col-12">
+	        <form method="POST" action=".">
+	            {% csrf_token %}
+	            {% for field in form %}
+	                <div class="input-group form-group">
+	                    <div class="input-group-prepend">
+	                        <span class="input-group-text"></span>
+	                    </div>
+	                    <input type="{{ field.field.widget.input_type }}" class="form-control" id="{{ field.id_for_label }}" placeholder="{{ field.label }}" name="{{ field.name }}"/>
+	                </div>
+	                {% if field.errors %}
+	                <span style="color:red;">{{ field.errors }}</span>
+	                {% endif %}
+	            {% endfor %}
+	            <button type="submit" class="btn btn-primary">회원가입</button>
+	        </form>
+	    </div>
+	</div>
+<div>
+{% endblock %}
