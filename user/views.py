@@ -21,3 +21,6 @@ class RegisterView(FormView):
         user.save()
 
         return super().form_valid(form)
+
+class LoginView(FormView):
+    template_name = 'login.html'

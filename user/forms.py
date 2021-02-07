@@ -27,3 +27,7 @@ class RegisterForm(forms.Form):
                     self.add_error('username', '아이디를 이미 존재합니다.')
             except User.DoesNotExist:
                 pass
+
+class LoginForm(forms.Form):
+    username = forms.CharField(error_messages={'required':'Username을 입력해주세요'},max_length=128, label='ID')
+    password = forms.CharField(error_messages={'required':'비밀번호를 입력해주세요.'})

@@ -17,9 +17,11 @@ from django.contrib import admin
 from django.urls import path
 
 from user.views import RegisterView
+from blog_page.views import BlogWrite
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-
-    path('register/', RegisterView.as_view(), name='register')
+    # path('login/', )
+    path('register/', RegisterView.as_view(), name='register'),
+    path('blog/write/', BlogWrite.as_view(), name='blog_write')
 ]
