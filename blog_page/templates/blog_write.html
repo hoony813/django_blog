@@ -17,6 +17,8 @@
                 reader.readAsDataURL(this.files[0]);
                 reader.onload = function(e) {
                   $('#image-preview').attr('src', e.target.result);
+                  $('#image-preview').attr('width', '180');
+                  $('#image-preview').attr('height', '180');
                 };
             }
         })
@@ -24,42 +26,42 @@
 </script>
 {% endblock %}
 {% block contents %}
-<div class="container">
-    <div class="row mt-3">
-        <div class="col-12 text-center">
-            <h1>블로그 등록하기</h1>
-        </div>
+<div class="row mt-3">
+    <div class="col-12 text-center">
+        <h1>블로그 등록하기</h1>
     </div>
-    <div>
-        <div class="row mt-3">
-            <div class="col-12">
-                {{ error }}
-            </div>
-        </div>
-    </div>
+</div>
+<div>
     <div class="row mt-3">
         <div class="col-12">
-            <form method="POST" action=".">
-                {% csrf_token %}
-                {% for field in form %}
-                <div class="form-group">
-                    <label for="{{ field.id_for_label }}">{{ field.label }}</label>
-                    {% if field.name == 'contents' %}
-                    <textarea class="form-control" name="{{ field.name }}" id="{{ field.id_for_label }}"></textarea>
-                    {% elif field.name == 'image' %}
-                    <input type="{{ field.field.widget.input_type }}" class="form-control" id="{{ field.id_for_label }}" placeholder="{{ field.label }}" name="{{ field.name }}"/>
-                    <image id="image-preview" />
-                    {% else %}
-                    <input type="{{ field.field.widget.input_type }}" class="form-control" id="{{ field.id_for_label }}" placeholder="{{ field.label }}" name="{{ field.name }}"/>
-                    {% endif %}
-                </div>
-                {% if field.erros %}
-                <span style="color:red">{{ field.errors }}</span>
-                {% endif %}
-                {% endfor %}
-                <button type="submit" class="btn btn-primary">등록</button>
-            </form>
+            {{ error }}
         </div>
+    </div>
+</div>
+<div class="row mt-3">
+    <div class="col-12">
+        <form method="POST" action="." enctype="multipart/form-data">
+            {% csrf_token %}
+            {% for field in form %}
+            <div class="form-group">
+                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                {% if field.name == 'contents' %}
+                <textarea class="form-control" name="{{ field.name }}" id="{{ field.id_for_label }}"></textarea>
+                {% elif field.name == 'image' %}
+                <input type="{{ field.field.widget.input_type }}" class="form-control" id="{{ field.id_for_label }}" name="{{ field.name }}"/>
+                <image id="image-preview" />
+                {% else %}
+                <input type="{{ field.field.widget.input_type }}" class="form-control" id="{{ field.id_for_label }}" placeholder="{{ field.label }}" name="{{ field.name }}"/>
+                {% endif %}
+            </div>
+            {% if field.erros %}
+            <span style="color:red">{{ field.errors }}</span>
+            {% endif %}
+            {% endfor %}
+            <button type="submit" class="btn btn-primary">등록</button>
+
+        </form>
+        <button class="btn btn-primary" onclick="location.href='/myblog/'">돌아가기</button>
     </div>
 </div>
 {% endblock %}

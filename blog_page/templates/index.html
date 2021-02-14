@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% block header %}
+<script>
+    function writer_detail(blog_id, id){
+        console.lfg
+        $('#blog-writer-' + blog_id).popover({
+           html: true,
+           content: "<p>11</p>"
+        }).popover('toggleEnabled');
+    }
+
+</script>
+{% endblock %}
+{% block contents %}
+
+<div class="row mt-3">
+    <div class="col-12">
+        <h3>최근 글들</h3>
+    </div>
+</div>
+{% for blog in blogs %}
+<div class="row mt-1 border">
+        <img src="{{ blog.thumbnails.url }}" class="col-3">
+        <div class="col-5">
+            <div class="my-1"><a href='/blog/detail/{{ blog.id }}'>{{ blog.title }}</a></div>
+            <div class="my-1">{{ blog.contents|safe|slice:":20" }}...</div>
+            <div id="tags" class="d-flex flex-row">
+            {% for tag in blog.tags.all %}
+            <span class="badge badge-secondary mx-1">{{ tag.name }}</span>
+            {% endfor %}
+            </div>
+        </div>
+        <div class="col-1 font-weight-bold font-italic">
+            <a id="blog-writer-{{ blog.id }}" onclick="writer_detail({{ blog.id }}, '{{ blog.writer }}');">{{ blog.writer }}</a>
+        </div>
+        <div class="col-3">{{ blog.registered_date }}</div>
+</div>
+{% endfor %}
+{% endblock %}

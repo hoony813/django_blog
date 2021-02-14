@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% load humanize %}
+{% block contents %}
+<div class="row mt-5">
+    <div class="col-12">
+        <div class="form-group">
+            <label class="mt-1" for="title">제목</label>
+            <div class="form-control" id="title"/>
+            <p>{{ blog.title }}</p>
+            </div>
+            <label class="mt-1" for="contents">내용</label>
+            <div id="contents" class="border" style="min-height:300px;">
+                {{ blog.contents|safe }}
+            </div>
+
+            <label class="mt-1" for="tags">태그</label>
+            <div id="tags" class="d-flex flex-row">
+            {% for tag in blog.tags.all %}
+            <a class="alert alert-primary mx-1">{{ tag.name }}</a>
+            {% endfor %}
+            </div>
+        </div>
+        <button class="btn btn-primary" onclick="location.href='/myblog/'">돌아기기</button>
+    </div>
+</div>
+{% endblock %}

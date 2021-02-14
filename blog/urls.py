@@ -15,13 +15,24 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from django.conf import settings
+from django.conf.urls.static import static
 
-from user.views import RegisterView
-from blog_page.views import BlogWrite
+from .settings import MEDIA_URL, MEDIA_ROOT
+from user.views import RegisterView, LoginView, logout
+from blog_page.views import (
+    BlogWrite, IndexView, MyBlogList, BlogDetail
+)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    # path('login/', )
+    path('', IndexView.as_view()),
+    path('logout/', logout, name='logout'),
+    path('login/', LoginView.as_view(), name='login'),
     path('register/', RegisterView.as_view(), name='register'),
-    path('blog/write/', BlogWrite.as_view(), name='blog_write')
+    path('blog/write/', BlogWrite.as_view(), name='blog_write'),
+    path('blog/detail/<int:pk>/', BlogDetail.as_view(), name='blog_detail'),
+    path('myblog/', MyBlogList.as_view(), name='myblog')
 ]
+
+urlpatterns += static(MEDIA_URL, document_root=MEDIA_ROOT)

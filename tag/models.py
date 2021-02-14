@@ -13,3 +13,4 @@ class Tag(models.Model):
     class Meta:
         db_table = 'tag'
         verbose_name = '태그'
+        verbose_name_plural = '태그'
