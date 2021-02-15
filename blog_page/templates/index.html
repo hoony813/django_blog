@@ -2,11 +2,11 @@
 {% block header %}
 <script>
     function writer_detail(blog_id, id){
-        console.lfg
+
         $('#blog-writer-' + blog_id).popover({
            html: true,
-           content: "<p>11</p>"
-        }).popover('toggleEnabled');
+           content: ""
+        }).popover('toggle');
     }
 
 </script>
@@ -31,9 +31,11 @@
             </div>
         </div>
         <div class="col-1 font-weight-bold font-italic">
-            <a id="blog-writer-{{ blog.id }}" onclick="writer_detail({{ blog.id }}, '{{ blog.writer }}');">{{ blog.writer }}</a>
+            <a id="blog-writer-{{ blog.id }}" href="/myblog/{{ blog.writer }}/">{{ blog.writer }}</a>
         </div>
         <div class="col-3">{{ blog.registered_date }}</div>
 </div>
+
+
 {% endfor %}
 {% endblock %}

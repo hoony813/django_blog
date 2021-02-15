@@ -21,7 +21,7 @@ from django.conf.urls.static import static
 from .settings import MEDIA_URL, MEDIA_ROOT
 from user.views import RegisterView, LoginView, logout
 from blog_page.views import (
-    BlogWrite, IndexView, MyBlogList, BlogDetail
+    BlogWrite, IndexView, MyBlogList, BlogDetail, BlogList
 )
 
 urlpatterns = [
@@ -32,6 +32,7 @@ urlpatterns = [
     path('register/', RegisterView.as_view(), name='register'),
     path('blog/write/', BlogWrite.as_view(), name='blog_write'),
     path('blog/detail/<int:pk>/', BlogDetail.as_view(), name='blog_detail'),
+    path('myblog/<str:writer>/', BlogList.as_view(), name='blog_list'),
     path('myblog/', MyBlogList.as_view(), name='myblog')
 ]
 

@@ -27,6 +27,13 @@ class MyBlogList(ListView):
         queryset = Blog.objects.filter(writer__username=self.request.session.get('user'))
         return queryset
 
+class BlogList(View):
+    def get(self, request, writer):
+
+        blogs = Blog.objects.filter(writer__username=writer)
+        return render(request, 'my_blog.html',  {'username': request.session.get('user'),'blogs':blogs,'writer':writer})
+
+
 class BlogDetail(DetailView):
     template_name = "blog_detail.html"
     queryset = Blog.objects.all()
