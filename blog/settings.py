@@ -42,7 +42,7 @@ INSTALLED_APPS = [
     'user.apps.UserConfig',
     'blog_page.apps.BlogPageConfig',
     'tag.apps.TagConfig',
-
+    'followers.apps.FollowersConfig'
 ]
 
 MIDDLEWARE = [

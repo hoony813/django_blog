@@ -2,10 +2,12 @@ from django.shortcuts import render
 from django.views.generic.edit import FormView
 from django.views.generic import ListView, DetailView
 from django.views import View
+
 from .forms import BlogForm
 from .models import Blog
 from user.models import User
 from tag.models import Tag
+from followers.models import Followers
 # Create your views here.
 
 
@@ -28,10 +30,21 @@ class MyBlogList(ListView):
         return queryset
 
 class BlogList(View):
-    def get(self, request, writer):
+    def get(self, request, writer=None):
+        username = request.session.get('user')
 
         blogs = Blog.objects.filter(writer__username=writer)
-        return render(request, 'my_blog.html',  {'username': request.session.get('user'),'blogs':blogs,'writer':writer})
+        followee = []
+        if username != None:
+            user = User.objects.get(username=username)
+            try:
+                followee = Followers.objects.get(follower=user)
+            except:
+                Followers.objects.create(follower=user)
+                followee = Followers.objects.get(follower=user)
+            print(list(followee))
+
+        return render(request, 'my_blog.html',  {'username': username,'blogs':blogs,'writer':writer})
 
 
 class BlogDetail(DetailView):
@@ -57,11 +70,12 @@ class BlogWrite(FormView):
 
     def form_valid(self, form):
 
+        print(self.request.FILES.get('image','blank.png'))
         user = User.objects.get(username=self.request.session.get('user'))
         blog = Blog(
             title=form.data.get('title'),
             contents=form.data.get('contents'),
-            thumbnails=self.request.FILES['image'],
+            thumbnails=self.request.FILES.get('image','blank.png'),
             writer=user,
         )
         blog.save()
