@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect
+from django.http import JsonResponse
 from django.views.generic.edit import FormView
 from django.views.generic import ListView, DetailView
 from django.views import View
@@ -49,6 +50,26 @@ class BlogList(View):
 
         return render(request, 'other_blog.html',  {'username': username,'blogs':blogs,'writer':writer,'follow_bool':follow_bool})
 
+
+class RelationCreateView(View):
+    def post(self, request):
+        username = request.session.get('user')
+        writer = request.POST.get('followee',None)
+        if writer == None:
+            return JsonResponse({'result': 'success'})
+        writer = User.objects.get(username=writer)
+        tt = request.POST.get('tt',None)
+        if tt == '0':
+            user = User.objects.get(username=username)
+            followee, _ = Followers.objects.get_or_create(follower=user)
+            followee.followee.add(writer)
+            followee.save()
+        elif tt == '1':
+            user = User.objects.get(username=username)
+            followee, _ = Followers.objects.get_or_create(follower=user)
+            followee.followee.remove(writer)
+            followee.save()
+        return JsonResponse({'result':"success"})
 
 class BlogDetail(DetailView):
     template_name = "blog_detail.html"
