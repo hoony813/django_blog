@@ -10,7 +10,9 @@
 <div class="row mt-1">
     <div class="col-10"></div>
     <div class="col-1">
-        {% if writer != username %}
+        {% if follow_bool %}
+        <button class="btn btn-sm btn-primary">UnFollow</button>
+        {% else %}
         <button class="btn btn-sm btn-primary">Follow</button>
         {% endif %}
     </div>

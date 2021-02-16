@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.views.generic.edit import FormView
 from django.views.generic import ListView, DetailView
 from django.views import View
@@ -32,19 +32,22 @@ class MyBlogList(ListView):
 class BlogList(View):
     def get(self, request, writer=None):
         username = request.session.get('user')
-
+        if writer == username:
+            return redirect('/myblog/')
         blogs = Blog.objects.filter(writer__username=writer)
         followee = []
         if username != None:
             user = User.objects.get(username=username)
-            try:
-                followee = Followers.objects.get(follower=user)
-            except:
-                Followers.objects.create(follower=user)
-                followee = Followers.objects.get(follower=user)
-            print(list(followee))
 
-        return render(request, 'my_blog.html',  {'username': username,'blogs':blogs,'writer':writer})
+            followee, _ = Followers.objects.get_or_create(follower=user)
+
+            followee = list(followee.followee.values('username'))
+
+            follow_bool = {'username':writer} in followee
+
+
+
+        return render(request, 'other_blog.html',  {'username': username,'blogs':blogs,'writer':writer,'follow_bool':follow_bool})
 
 
 class BlogDetail(DetailView):
