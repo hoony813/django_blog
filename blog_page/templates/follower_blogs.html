@@ -17,6 +17,7 @@
   {% endblock %}
 </head>
 
+
 <body>
     <div class="container">
     {% for blog in blogs %}
@@ -40,6 +41,8 @@
             </div>
             <div class="col-3">{{ blog.registered_date }}</div>
     </div>
+    {% empty %}
+    <div><h1>No Contents</h1></div>
     {% endfor %}
     </div>
 </body>

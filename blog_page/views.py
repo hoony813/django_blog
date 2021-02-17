@@ -12,10 +12,28 @@ from followers.models import Followers
 # Create your views here.
 
 
+class HomePage(View):
+    def get(self, request):
+
+        return render(request,'homepage.html', {'username': request.session.get('user')})
+
 class IndexView(View):
     def get(self, request):
         blogs = Blog.objects.all().order_by('-id')[:5]
         return render(request, 'index.html', {'username': request.session.get('user'), 'blogs':blogs})
+
+class FollowerBlogView(View):
+    def get(self, request):
+        username = request.session.get('user')
+        if username == None:
+            blogs = []
+        else:
+            user = User.objects.get(username=username)
+            followee, _ = Followers.objects.get_or_create(follower=user)
+            followee = followee.followee.all()
+            blogs = Blog.objects.filter(writer__in=followee).all().order_by('-id')
+            print(blogs)
+        return render(request, 'follower_blogs.html',{'username': request.session.get('user'), 'blogs':blogs})
 
 class MyBlogList(ListView):
     template_name = 'my_blog.html'
@@ -39,15 +57,9 @@ class BlogList(View):
         followee = []
         if username != None:
             user = User.objects.get(username=username)
-
             followee, _ = Followers.objects.get_or_create(follower=user)
-
             followee = list(followee.followee.values('username'))
-
             follow_bool = {'username':writer} in followee
-
-
-
         return render(request, 'other_blog.html',  {'username': username,'blogs':blogs,'writer':writer,'follow_bool':follow_bool})
 
 

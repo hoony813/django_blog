@@ -21,12 +21,14 @@ from django.conf.urls.static import static
 from .settings import MEDIA_URL, MEDIA_ROOT
 from user.views import RegisterView, LoginView, logout
 from blog_page.views import (
-    BlogWrite, IndexView, MyBlogList, BlogDetail, BlogList, RelationCreateView
+    HomePage,
+    BlogWrite, IndexView, MyBlogList, BlogDetail, BlogList, RelationCreateView, FollowerBlogView
 )
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', IndexView.as_view()),
+    path('recent-blog/', IndexView.as_view()),
+    path('', HomePage.as_view()),
     path('logout/', logout, name='logout'),
     path('login/', LoginView.as_view(), name='login'),
     path('register/', RegisterView.as_view(), name='register'),
@@ -35,6 +37,7 @@ urlpatterns = [
     path('myblog/<str:writer>/', BlogList.as_view(), name='blog_list'),
     path('myblog/', MyBlogList.as_view(), name='myblog'),
     path('follow/', RelationCreateView.as_view()),
+    path('blog/follower/', FollowerBlogView.as_view()),
 ]
 
 urlpatterns += static(MEDIA_URL, document_root=MEDIA_ROOT)
