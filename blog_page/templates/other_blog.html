@@ -56,7 +56,13 @@
             url: '/follow/',
             data: {'followee':'{{ writer }}','tt':tt},
             success: function(response){
-                window.location.reload();
+                if(response['result'] == 'success'){
+                    window.location.reload();
+                }
+                else if(response['result'] == 'fail'){
+                    console.log('1111');
+                    location.href = '/login';
+                }
             }
         });
     }

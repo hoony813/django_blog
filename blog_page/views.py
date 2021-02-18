@@ -3,13 +3,16 @@ from django.http import JsonResponse
 from django.views.generic.edit import FormView
 from django.views.generic import ListView, DetailView
 from django.views import View
+from django.utils.decorators import method_decorator
 
 from .forms import BlogForm
 from .models import Blog
 from user.models import User
 from tag.models import Tag
 from followers.models import Followers
+from user.decorators import login_required
 # Create your views here.
+
 
 
 class HomePage(View):
@@ -35,6 +38,7 @@ class FollowerBlogView(View):
             print(blogs)
         return render(request, 'follower_blogs.html',{'username': request.session.get('user'), 'blogs':blogs})
 
+@method_decorator(login_required, name='dispatch')
 class MyBlogList(ListView):
     template_name = 'my_blog.html'
     context_object_name = 'blogs'
@@ -60,15 +64,23 @@ class BlogList(View):
             followee, _ = Followers.objects.get_or_create(follower=user)
             followee = list(followee.followee.values('username'))
             follow_bool = {'username':writer} in followee
+        else:
+            follow_bool = False
         return render(request, 'other_blog.html',  {'username': username,'blogs':blogs,'writer':writer,'follow_bool':follow_bool})
+
 
 
 class RelationCreateView(View):
     def post(self, request):
         username = request.session.get('user')
+
+        if username == None:
+            return JsonResponse({'result': 'fail'})
         writer = request.POST.get('followee',None)
+
         if writer == None:
-            return JsonResponse({'result': 'success'})
+
+            return JsonResponse({'result': 'fail'})
         writer = User.objects.get(username=writer)
         tt = request.POST.get('tt',None)
         if tt == '0':
@@ -94,6 +106,7 @@ class BlogDetail(DetailView):
         return context
 
 
+@method_decorator(login_required, name='dispatch')
 class BlogWrite(FormView):
     template_name = 'blog_write.html'
     form_class = BlogForm
