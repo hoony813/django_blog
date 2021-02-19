@@ -4,7 +4,7 @@ from django.views.generic.edit import FormView
 from django.views.generic import ListView, DetailView
 from django.views import View
 from django.utils.decorators import method_decorator
-
+from django.core.paginator import Paginator
 from .forms import BlogForm
 from .models import Blog
 from user.models import User
@@ -22,7 +22,11 @@ class HomePage(View):
 
 class IndexView(View):
     def get(self, request):
-        blogs = Blog.objects.all().order_by('-id')[:5]
+        blogs = Blog.objects.all().order_by('-id')
+        page = int(request.GET.get('p', 1))
+        paginator = Paginator(blogs, 4)
+
+        blogs = paginator.get_page(page)
         return render(request, 'index.html', {'username': request.session.get('user'), 'blogs':blogs})
 
 class FollowerBlogView(View):
@@ -35,13 +39,16 @@ class FollowerBlogView(View):
             followee, _ = Followers.objects.get_or_create(follower=user)
             followee = followee.followee.all()
             blogs = Blog.objects.filter(writer__in=followee).all().order_by('-id')
-            print(blogs)
+            page = int(request.GET.get('p', 1))
+            paginator = Paginator(blogs, 4)
+
+            blogs = paginator.get_page(page)
         return render(request, 'follower_blogs.html',{'username': request.session.get('user'), 'blogs':blogs})
 
 @method_decorator(login_required, name='dispatch')
 class MyBlogList(ListView):
     template_name = 'my_blog.html'
-    context_object_name = 'blogs'
+    paginate_by = 4
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -49,7 +56,7 @@ class MyBlogList(ListView):
         return context
 
     def get_queryset(self, **kwargs):
-        queryset = Blog.objects.filter(writer__username=self.request.session.get('user'))
+        queryset = Blog.objects.filter(writer__username=self.request.session.get('user')).order_by('-id')
         return queryset
 
 class BlogList(View):
@@ -110,7 +117,7 @@ class BlogDetail(DetailView):
 class BlogWrite(FormView):
     template_name = 'blog_write.html'
     form_class = BlogForm
-    success_url = '/'
+    success_url = 'myblog/'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
