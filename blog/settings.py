@@ -28,10 +28,21 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+BATON = {
+    'SITE_HEADER': 'Django-Blog',
+    'SITE_TITLE': 'Django-Blog',
+    'INDEX_TITLE': 'Blog-Site Administration',
+    'SUPPORT_HREF': 'https://github.com/hoony813/django_blog',
+    'COPYRIGHT': 'copyright © 2021 <a href="https://github.com/hoony813/django_blog">Hoony813</a>',
+    'POWERED_BY': '<a href="https://github.com/hoony813/django_blog">Hoony813</a>',
+    'MENU_ALWAYS_COLLAPSED':False,
+    'MENU_TITLE':'Menu'
+}
 
 # Application definition
 
 INSTALLED_APPS = [
+    'baton',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -42,7 +53,9 @@ INSTALLED_APPS = [
     'user.apps.UserConfig',
     'blog_page.apps.BlogPageConfig',
     'tag.apps.TagConfig',
-    'followers.apps.FollowersConfig'
+    'followers.apps.FollowersConfig',
+    
+    'baton.autodiscover',
 ]
 
 MIDDLEWARE = [
@@ -62,7 +75,9 @@ X_FRAME_OPTIONS = 'SAMEORIGIN'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [
+            os.path.join(BASE_DIR, 'templates')
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
