@@ -12,7 +12,7 @@
 * 홈화면
   - 최근 글들
  
-![최근 글들](./image/recent blog.png)
+![최근 글들](./image/recent blogs.png)
   - 팔로우한 유저들의 글
   
 ![팔로우한 유저들의 글](./image/follower text.png)
